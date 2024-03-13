@@ -52,6 +52,7 @@ public class StudentRegistrationServer {
 					String input = scanner.nextLine();
 					if (input.equalsIgnoreCase("shutdown")) {
 						shutdownLatch.countDown(); // Signal the server to stop
+						Thread.currentThread().interrupt(); // Interrupt the shutdownThread
 						return;
 					}
 				}
