@@ -51,7 +51,9 @@ public class StudentRegistrationServer {
 				while (!Thread.currentThread().isInterrupted()) {
 					String input = scanner.nextLine();
 					if (input.equalsIgnoreCase("shutdown")) {
-						shutdownLatch.countDown(); // Signal the server to stop
+						if (shutdownLatch.getCount() > 0) {
+							shutdownLatch.countDown(); // Signal the server to stop
+						}
 						Thread.currentThread().interrupt(); // Interrupt the shutdownThread
 						return;
 					}
