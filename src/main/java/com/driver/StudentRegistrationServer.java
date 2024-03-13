@@ -23,17 +23,52 @@ public class StudentRegistrationServer {
 
 	    private static void startServer() throws InterruptedException {
 	    	// your code goes here
+			System.out.println("Registration server started. Enter 'shutdown' to stop the server.");
+
+			Thread shutdownThread = new Thread(() -> {
+				try {
+					waitForShutdownSignal();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			});
+			shutdownThread.start();
+
+			int studentId = 1;
+			while (!shutdownLatch.await(1, TimeUnit.SECONDS)) {
+				registerStudent(studentId++);
+			}
 	    }
 
 	    private static void registerStudent(int studentId) {
 	    	// your code goes here
+			System.out.println("Student " + studentId + " registered.");
 	    }
 
 	    private static void waitForShutdownSignal() throws InterruptedException {
 	    	// your code goes here
+			try (Scanner scanner = new Scanner(System.in)) {
+				while (!Thread.currentThread().isInterrupted()) {
+					String input = scanner.nextLine();
+					if (input.equalsIgnoreCase("shutdown")) {
+						shutdownLatch.countDown(); // Signal the server to stop
+						return;
+					}
+				}
+			} catch (IllegalStateException e) {
+				// Scanner was closed, ignoring
+			}
 	    }
 
 	    private static void stopServer() {
 	    	// your code goes here
+			executorService.shutdown();
+			try {
+				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+					executorService.shutdownNow();
+				}
+			} catch (InterruptedException e) {
+				executorService.shutdownNow();
+			}
 	    }
 }
