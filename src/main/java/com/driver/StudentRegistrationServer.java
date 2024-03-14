@@ -25,7 +25,7 @@ public class StudentRegistrationServer {
 	    	// your code goes here
 			System.out.println("Registration server started. Enter 'shutdown' to stop the server.");
 
-			Thread shutdownThread = new Thread(() -> {
+			/*Thread shutdownThread = new Thread(() -> {
 				try {
 					waitForShutdownSignal();
 				} catch (InterruptedException e) {
@@ -38,6 +38,13 @@ public class StudentRegistrationServer {
 			while (!shutdownLatch.await(1, TimeUnit.SECONDS)) {
 				registerStudent(studentId++);
 			}
+
+			 */
+			for(int i=1 ;i<=10;i++){
+				int studentId=i;
+				executorService.submit(()->registerStudent(studentId));
+			}
+			waitForShutdownSignal();
 	    }
 
 	    private static void registerStudent(int studentId) {
@@ -65,8 +72,9 @@ public class StudentRegistrationServer {
 
 	    private static void stopServer() {
 	    	// your code goes here
-			executorService.shutdown();
+
 			try {
+				executorService.shutdown();
 				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
 					executorService.shutdownNow();
 				}
