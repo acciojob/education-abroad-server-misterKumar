@@ -75,11 +75,14 @@ public class StudentRegistrationServer {
 
 			try {
 				executorService.shutdown();
+
 				if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+					System.out.println("Forcing shutdown due to pending tasks...");
 					executorService.shutdownNow();
 				}
 			} catch (InterruptedException e) {
-				executorService.shutdownNow();
+				//executorService.shutdownNow();
+				e.printStackTrace();
 			}
 	    }
 }
