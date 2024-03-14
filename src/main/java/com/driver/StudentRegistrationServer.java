@@ -54,7 +54,7 @@ public class StudentRegistrationServer {
 
 	    private static void waitForShutdownSignal() throws InterruptedException {
 	    	// your code goes here
-			try (Scanner scanner = new Scanner(System.in)) {
+			/*try (Scanner scanner = new Scanner(System.in)) {
 				while (!Thread.currentThread().isInterrupted()) {
 					String input = scanner.nextLine();
 					if (input.equalsIgnoreCase("shutdown")) {
@@ -67,7 +67,16 @@ public class StudentRegistrationServer {
 				}
 			} catch (IllegalStateException e) {
 				// Scanner was closed, ignoring
+			}*/
+			Scanner sc=new Scanner(System.in);
+			while(true){
+				String in=sc.nextLine().trim().toLowerCase();
+				if(in.equals("shutdown")){
+					shutdownLatch.countDown();
+					break;
+				}
 			}
+			sc.close();
 	    }
 
 	    private static void stopServer() {
